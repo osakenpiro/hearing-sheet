@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Web制作ヒアリングシート | osakenpiro</title>
+<meta property="og:title" content="Web制作ヒアリングシート">
+<meta property="og:description" content="LP・Webページ制作のための要件ヒアリングフォーム">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;500;700&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background: #0a0a0f;
+    color: #c8c0d8;
+    min-height: 100vh;
+  }
+  .container { max-width: 640px; margin: 0 auto; padding: 24px 16px; }
+  h1 {
+    text-align: center; font-size: 22px; font-weight: 700;
+    color: #d4af37; margin-bottom: 4px;
+  }
+  .subtitle {
+    text-align: center; font-size: 12px; color: #5a4a6a;
+    letter-spacing: 2px; margin-bottom: 24px;
+  }
+  .intro {
+    background: #1a1520; border: 1px solid #2a2035; border-radius: 8px;
+    padding: 16px; margin-bottom: 20px; font-size: 13px; line-height: 1.8;
+  }
+  .intro strong { color: #d4af37; }
+  .section {
+    background: #1a1520; border: 1px solid #2a2035; border-radius: 8px;
+    padding: 16px; margin-bottom: 12px;
+  }
+  .section-title {
+    font-size: 14px; font-weight: 700; color: #d4af37;
+    margin-bottom: 12px; padding-bottom: 6px;
+    border-bottom: 1px solid #2a2035;
+  }
+  .section-title span { font-size: 11px; color: #5a4a6a; font-weight: 300; margin-left: 8px; }
+  label {
+    display: block; font-size: 13px; color: #a09ab0;
+    margin-bottom: 4px; margin-top: 12px;
+  }
+  label:first-of-type { margin-top: 0; }
+  .required::after {
+    content: ' *'; color: #ef4444; font-size: 11px;
+  }
+  input[type="text"], input[type="url"], input[type="email"], textarea, select {
+    width: 100%; padding: 10px 12px; font-size: 14px;
+    font-family: inherit; color: #e0d8f0;
+    background: #0f0d14; border: 1px solid #2a2035; border-radius: 6px;
+    outline: none; transition: border-color 0.2s;
+  }
+  input:focus, textarea:focus, select:focus { border-color: #d4af37; }
+  textarea { resize: vertical; min-height: 80px; }
+  select { appearance: none; cursor: pointer; }
+  .radio-group { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+  .radio-group label {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 14px; background: #0f0d14; border: 1px solid #2a2035;
+    border-radius: 20px; cursor: pointer; font-size: 13px;
+    transition: all 0.2s; margin: 0;
+  }
+  .radio-group input { display: none; }
+  .radio-group input:checked + span { color: #d4af37; }
+  .radio-group label:has(input:checked) { border-color: #d4af37; background: #1a1520; }
+  .checkbox-group { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+  .checkbox-group label {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 12px; background: #0f0d14; border: 1px solid #2a2035;
+    border-radius: 20px; cursor: pointer; font-size: 12px;
+    transition: all 0.2s; margin: 0;
+  }
+  .checkbox-group input { display: none; }
+  .checkbox-group input:checked + span { color: #d4af37; }
+  .checkbox-group label:has(input:checked) { border-color: #d4af37; background: #1a1520; }
+  .hint { font-size: 11px; color: #5a4a6a; margin-top: 2px; }
+  .btn {
+    display: block; width: 100%; padding: 14px; margin-top: 20px;
+    font-family: inherit; font-size: 16px; font-weight: 700;
+    color: #0a0a0f; background: linear-gradient(135deg, #d4af37, #f0d060);
+    border: none; border-radius: 8px; cursor: pointer;
+    transition: transform 0.1s, box-shadow 0.2s;
+  }
+  .btn:hover { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(212,175,55,0.3); }
+  .btn:active { transform: translateY(0); }
+  .btn-secondary {
+    background: transparent; color: #d4af37; border: 1px solid #d4af37;
+    margin-top: 8px;
+  }
+  .btn-secondary:hover { background: #1a1520; }
+  .output-area {
+    display: none; background: #0f0d14; border: 1px solid #d4af37;
+    border-radius: 8px; padding: 16px; margin-top: 16px;
+    font-size: 13px; white-space: pre-wrap; line-height: 1.6;
+    max-height: 400px; overflow-y: auto;
+  }
+  .output-area.show { display: block; }
+  .copied-toast {
+    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+    background: #d4af37; color: #0a0a0f; padding: 10px 24px;
+    border-radius: 8px; font-weight: 700; font-size: 14px;
+    opacity: 0; transition: opacity 0.3s; pointer-events: none;
+  }
+  .copied-toast.show { opacity: 1; }
+  .footer {
+    text-align: center; padding: 20px 0; font-size: 10px; color: #3a3045;
+  }
+  .footer a { color: #5a4a6a; text-decoration: none; }
+  .step-indicator {
+    display: flex; justify-content: center; gap: 8px; margin-bottom: 20px;
+  }
+  .step-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: #2a2035; transition: background 0.3s;
+  }
+  .step-dot.active { background: #d4af37; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>📋 Web制作ヒアリングシート</h1>
+  <p class="subtitle">osakenpiro — LP / Webページ制作</p>
+
+  <div class="intro">
+    ご依頼ありがとうございます。<br>
+    以下のフォームにご記入いただければ、<strong>最短1〜3日</strong>で初稿をお届けします。<br>
+    わからない項目は空欄でOKです。後から一緒に決めましょう。
+  </div>
+
+  <!-- SECTION 1: 基本情報 -->
+  <div class="section">
+    <div class="section-title">1. 基本情報 <span>あなたのことを教えてください</span></div>
+    <label class="required">お名前 / 会社名</label>
+    <input type="text" id="name" placeholder="例: 山田太郎 / 株式会社〇〇">
+
+    <label>業種・サービス内容</label>
+    <input type="text" id="business" placeholder="例: パーソナルトレーニングジム">
+
+    <label>連絡先メールアドレス</label>
+    <input type="email" id="email" placeholder="例: info@example.com">
+  </div>
+
+  <!-- SECTION 2: ページの目的 -->
+  <div class="section">
+    <div class="section-title">2. ページの目的 <span>何のためのページですか？</span></div>
+    <label class="required">ページの種類</label>
+    <div class="radio-group">
+      <label><input type="radio" name="pageType" value="LP（商品・サービス紹介）"><span>LP（商品紹介）</span></label>
+      <label><input type="radio" name="pageType" value="ポートフォリオ"><span>ポートフォリオ</span></label>
+      <label><input type="radio" name="pageType" value="イベント告知"><span>イベント告知</span></label>
+      <label><input type="radio" name="pageType" value="コーポレートサイト"><span>コーポレート</span></label>
+      <label><input type="radio" name="pageType" value="その他"><span>その他</span></label>
+    </div>
+
+    <label class="required">ページの目的（何をしてほしいページ？）</label>
+    <textarea id="purpose" placeholder="例: 体験レッスンの申し込みを増やしたい&#10;例: 自分の作品をまとめて見せたい"></textarea>
+
+    <label>ターゲット（誰に見てもらいたい？）</label>
+    <input type="text" id="target" placeholder="例: 20〜30代の女性、ダイエットに興味がある人">
+  </div>
+
+  <!-- SECTION 3: デザイン -->
+  <div class="section">
+    <div class="section-title">3. デザインのイメージ <span>ざっくりでOK</span></div>
+
+    <label>雰囲気</label>
+    <div class="checkbox-group">
+      <label><input type="checkbox" value="シンプル・ミニマル"><span>シンプル</span></label>
+      <label><input type="checkbox" value="かわいい・ポップ"><span>かわいい</span></label>
+      <label><input type="checkbox" value="かっこいい・クール"><span>かっこいい</span></label>
+      <label><input type="checkbox" value="高級感・洗練"><span>高級感</span></label>
+      <label><input type="checkbox" value="ナチュラル・温かい"><span>ナチュラル</span></label>
+      <label><input type="checkbox" value="ビジネス・信頼感"><span>ビジネス</span></label>
+      <label><input type="checkbox" value="おまかせ"><span>おまかせ</span></label>
+    </div>
+
+    <label>メインカラー（希望があれば）</label>
+    <input type="text" id="color" placeholder="例: 青系、ブランドカラー #FF5733 など">
+
+    <label>参考サイト（こんな雰囲気にしたい）</label>
+    <textarea id="reference" placeholder="URLを貼ってください。複数OK。&#10;なければ空欄で大丈夫です。"></textarea>
+  </div>
+
+  <!-- SECTION 4: コンテンツ -->
+  <div class="section">
+    <div class="section-title">4. 載せたい内容 <span>テキスト・画像について</span></div>
+
+    <label>掲載したいセクション</label>
+    <div class="checkbox-group">
+      <label><input type="checkbox" value="ヘッダー（キャッチコピー＋メイン画像）"><span>ヘッダー</span></label>
+      <label><input type="checkbox" value="サービス紹介"><span>サービス紹介</span></label>
+      <label><input type="checkbox" value="料金表"><span>料金表</span></label>
+      <label><input type="checkbox" value="お客様の声"><span>お客様の声</span></label>
+      <label><input type="checkbox" value="よくある質問"><span>FAQ</span></label>
+      <label><input type="checkbox" value="アクセス・地図"><span>アクセス</span></label>
+      <label><input type="checkbox" value="お問い合わせフォーム"><span>お問い合わせ</span></label>
+      <label><input type="checkbox" value="SNSリンク"><span>SNSリンク</span></label>
+      <label><input type="checkbox" value="プロフィール"><span>プロフィール</span></label>
+    </div>
+
+    <label>テキスト原稿</label>
+    <textarea id="text" rows="5" placeholder="載せたい文章をそのまま貼ってください。&#10;なければ「おまかせ」と書いていただければ、こちらで作成します。"></textarea>
+
+    <label>画像について</label>
+    <div class="radio-group">
+      <label><input type="radio" name="images" value="自分で用意する"><span>自分で用意</span></label>
+      <label><input type="radio" name="images" value="フリー素材でおまかせ"><span>フリー素材でOK</span></label>
+      <label><input type="radio" name="images" value="一部用意・一部おまかせ"><span>一部おまかせ</span></label>
+    </div>
+  </div>
+
+  <!-- SECTION 5: 技術要件 -->
+  <div class="section">
+    <div class="section-title">5. その他 <span>わからなければ空欄でOK</span></div>
+
+    <label>ドメイン・サーバー</label>
+    <div class="radio-group">
+      <label><input type="radio" name="hosting" value="持っている"><span>持ってる</span></label>
+      <label><input type="radio" name="hosting" value="持っていない（相談したい）"><span>持ってない</span></label>
+      <label><input type="radio" name="hosting" value="無料ホスティングでOK"><span>無料でOK</span></label>
+    </div>
+    <p class="hint">GitHub Pagesなら月額0円で運用可能です。ご提案もできます。</p>
+
+    <label>納期の希望</label>
+    <input type="text" id="deadline" placeholder="例: 1週間以内、4/15まで、急ぎではない">
+
+    <label>予算の目安</label>
+    <input type="text" id="budget" placeholder="例: 15,000円くらい、相談したい">
+
+    <label>その他ご質問・ご要望</label>
+    <textarea id="other" placeholder="何でもお気軽にどうぞ！"></textarea>
+  </div>
+
+  <button class="btn" onclick="generateSummary()">📝 回答をまとめる</button>
+
+  <div class="output-area" id="output"></div>
+  <button class="btn btn-secondary" id="copyBtn" style="display:none" onclick="copySummary()">📋 コピーする（メッセージに貼り付け用）</button>
+
+  <div class="footer">
+    <a href="https://osakenpiro.github.io/">osakenpiro</a> — AI × Web Development
+  </div>
+</div>
+
+<div class="copied-toast" id="toast">コピーしました！</div>
+
+<script>
+function getRadioValue(name) {
+  const el = document.querySelector(`input[name="${name}"]:checked`);
+  return el ? el.value : '未選択';
+}
+function getCheckboxValues(container) {
+  const checks = container.querySelectorAll('input[type="checkbox"]:checked');
+  return checks.length ? Array.from(checks).map(c => c.value).join('、') : '未選択';
+}
+function v(id) { return document.getElementById(id).value.trim() || '（未記入）'; }
+
+function generateSummary() {
+  const sections = document.querySelectorAll('.checkbox-group');
+  const mood = getCheckboxValues(sections[0]);
+  const content = getCheckboxValues(sections[1]);
+
+  const summary = `━━━━━━━━━━━━━━━━━━━━
+📋 Web制作ヒアリングシート 回答
+━━━━━━━━━━━━━━━━━━━━
+
+■ 基本情報
+お名前/会社名: ${v('name')}
+業種: ${v('business')}
+メール: ${v('email')}
+
+■ ページの目的
+種類: ${getRadioValue('pageType')}
+目的: ${v('purpose')}
+ターゲット: ${v('target')}
+
+■ デザイン
+雰囲気: ${mood}
+メインカラー: ${v('color')}
+参考サイト: ${v('reference')}
+
+■ コンテンツ
+掲載セクション: ${content}
+テキスト原稿: ${v('text')}
+画像: ${getRadioValue('images')}
+
+■ その他
+ホスティング: ${getRadioValue('hosting')}
+納期: ${v('deadline')}
+予算: ${v('budget')}
+備考: ${v('other')}
+
+━━━━━━━━━━━━━━━━━━━━`;
+
+  const output = document.getElementById('output');
+  output.textContent = summary;
+  output.classList.add('show');
+  document.getElementById('copyBtn').style.display = 'block';
+  output.scrollIntoView({ behavior: 'smooth' });
+}
+
+function copySummary() {
+  const text = document.getElementById('output').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const toast = document.getElementById('toast');
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2000);
+  });
+}
+</script>
+</body>
+</html>
